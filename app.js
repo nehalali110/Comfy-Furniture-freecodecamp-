@@ -2,12 +2,14 @@
 const cartBtn  = document.querySelector(".cart-btn")
 const closeCartBtn  = document.querySelector(".close-cart")
 const clearCartBtn  = document.querySelector(".clear-cart") 
-const cartDOM  = document.querySelector(".cart")
-const cartOverlay  = document.querySelector(".cart-overlay")
+// const cartDOM  = document.querySelector(".cart")
+// const cartOverlay  = document.querySelector(".cart-overlay")
 const cartItems  = document.querySelector(".cart-items")
 const cartTotal  = document.querySelector(".cart-total")
 const cartContent  = document.querySelector(".cart-content")
 const productsDOM  = document.querySelector(".products-center")
+const cartDOM  = document.querySelector(".cart")
+const cartOverlay  = document.querySelector(".cart-overlay")   
 // if we declare add to cart button variables here then we will get empty nodelist because the products are declared asyncronously and we have to wait for them and declare it with them
 // const btns = document.querySelectorAll('.bag-btn')
 // console.log(btns)
@@ -67,6 +69,7 @@ class UI{
             productsDOM.innerHTML = result
         });
     }
+    
     getBagBtns(){
         // to get rid of NodeList we have to declare a spread operator to convert it into an array 
         const btns = [...document.querySelectorAll('.bag-btn')]
@@ -97,6 +100,13 @@ class UI{
 
                     // Update the cartitems value and cart total
                     this.setCartValues(cart)
+
+                    // display the clicked prroduct in cart
+                    this.addToCart(cartItem)
+
+                    // Lastly show the cart bar
+                    // this.showCart()
+                    
                 })
             }
         })
@@ -111,10 +121,36 @@ class UI{
         })
         // now displaying the totals
         cartTotal.innerText = parseFloat(total.toFixed(2)) // parse will limit the decimal places to 2 digits
-        cartItems.innerText = items
-
-        
+        cartItems.innerText = items      
     }
+    addToCart(item){
+        // first we created a div and added cart-item for styling and then editing its html
+        const div = document.createElement('div')
+        div.classList.add('cart-item')
+        div.innerHTML = `
+        <img src="${item.image}" alt="product">
+        <div>
+            <h4>${item.title}</h4>
+            <h5>$ ${item.price}</h5>
+            <span class="remove-item" data-id="${item.id}">remove</span> 
+        </div>
+        <div>
+            <i class="fas fa-chevron-up" data-id="${item.id}"></i>
+            <p class="item-amount">${item.amount}</p>
+            <i class="fas fa-chevron-down" data-id="${item.id}"></i>
+        </div>
+        `
+        // now add this div element to the cart content for display
+        cartContent.appendChild(div)    
+    }
+    
+    showCart(){
+    cartDOM.classList.add("showCart");
+    cartOverlay.classList.add("transparentBcg")
+    }
+       
+  
+    
 }
 
 // local storage
